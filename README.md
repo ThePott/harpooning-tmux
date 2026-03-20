@@ -37,7 +37,7 @@ set -g @plugin 'https://github.com/ThePott/harpooning-tmux'
 
 - prefix + hs: fuzzy find sessions
 - prefix + ho: show harpooning-list
--
+- prefix + 0, 1, ... , 9: go to n-th session in the list (starting from 0)
 
 ## Limitation
 
