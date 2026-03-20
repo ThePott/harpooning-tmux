@@ -27,8 +27,8 @@ taste, navigate them with key binds.
 
 1. add this to `~/.tmux.conf`
 
-```tmux
-
+```
+set -g @plugin 'https://github.com/ThePott/harpooning-tmux'
 ```
 
 2. press `prefix + I` to install package
