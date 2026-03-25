@@ -1,8 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
+# TODO: if no tmux, popup message
+# TODO: if no fzf, popup message
+
 SEARCH_PATHS=(
-    "$HOME/:1"
+    "$HOME/.config/nvim:1"
+    "$HOME/custom-tmux-plugins/:1"
+    "$HOME/custom-nvim-plugins/:1"
     "$HOME/Desktop/SRC/OZ_CODING_SCHOOL/:3"
     "$HOME/Desktop/SRC/DRAGON_WARRIOR/:3"
 )

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# TODO: if no tmux, popup message
+# TODO: if no fzf, popup message
+
 # Breakdown
 # `[ ... ]`: test command, works as if statement
 # `-n`: return true for truthy, false for falsy

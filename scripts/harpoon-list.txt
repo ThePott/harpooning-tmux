@@ -1,5 +1,0 @@
-git-blog
-iua
-zig-book-practice
-tmux
-config
