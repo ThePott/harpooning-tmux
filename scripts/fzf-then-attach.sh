@@ -8,6 +8,8 @@ SEARCH_PATHS=(
     "$HOME/.config/nvim:1"
     "$HOME/custom-tmux-plugins/:1"
     "$HOME/custom-nvim-plugins/:1"
+    "$HOME/:1"
+    "$HOME/qmk_firmware/keyboards/keebio/nyquist/:1"
     "$HOME/Desktop/SRC/OZ_CODING_SCHOOL/:3"
     "$HOME/Desktop/SRC/DRAGON_WARRIOR/:3"
 )
