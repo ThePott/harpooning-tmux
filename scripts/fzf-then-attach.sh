@@ -61,11 +61,5 @@ tmux switch-client -t "$session_name"
 
 # NOTE: handle list
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-HARPOON_LIST="$SCRIPT_DIR/harpoon-list.md"
-if grep -qxF "- [x] $SESSION" "$HARPOON_LIST"; then # Check if checked version exists
-    : # already active, do nothing (`:` do nothing)
-elif grep -qxF "- [ ] $SESSION" "$HARPOON_LIST"; then # Check if unchecked version exists, if so convert to checked
-    sed -i '' "s/- [ ] $SESSION/- [x] $SESSION/" "$HARPOON_LIST"
-else # Not found, add as checked
-    echo "- [x] $SESSION" >> "$HARPOON_LIST"
-fi
+ADD_SESSION="$SCRIPT_DIR/handle-list/add-session.sh"
+bash "$ADD_SESSION" "$session_name" 
