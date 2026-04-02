@@ -24,7 +24,18 @@ else
     bash "$ADD_SESSION" "$FIRST_CHECKED_SESSION"
 fi
 
-# TODO:
-# for loop each line
-# check if there are mismatching actual session vs session in list
-# if mismatching, delete opponent (if no actual session, remove that session from list. if not in list, then kill actual session)
+LIST_SESSIONS=$(sed 's/^- \[.\] //' "$HARPOON_LIST")
+ACTUAL_SESSIONS=$(tmux list-sessions -F "#{session_name}")
+
+while IFS= read -r session; do
+    if ! echo "$ACTUAL_SESSIONS" | grep -qx "$session"; then
+        # Session in list but not in tmux - remove from list
+        sed -i '' "/^- \[.\] $session$/d" "$HARPOON_LIST"
+    fi
+done <<< "$LIST_SESSIONS"
+while IFS= read -r session; do
+    if ! echo "$LIST_SESSIONS" | grep -qx "$session"; then
+        # Session in tmux but not in list - kill it
+        tmux kill-session -t "$session"
+    fi
+done <<< "$ACTUAL_SESSIONS"
