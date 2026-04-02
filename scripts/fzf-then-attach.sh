@@ -52,9 +52,20 @@ selected=$(find_git_dirs | sort -u | fzf)
 
 [[ -n "$selected" ]] || exit 0
 
-# Create/switch tmux session
+# NOTE: handle session
 session_name=$(basename "$selected" | tr . _)
 if ! tmux has-session -t="$session_name" 2>/dev/null; then
    tmux new-session -ds "$session_name" -c "$selected"
 fi
 tmux switch-client -t "$session_name"
+
+# NOTE: handle list
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+HARPOON_LIST="$SCRIPT_DIR/harpoon-list.md"
+if grep -qxF "- [x] $SESSION" "$HARPOON_LIST"; then # Check if checked version exists
+    : # already active, do nothing (`:` do nothing)
+elif grep -qxF "- [ ] $SESSION" "$HARPOON_LIST"; then # Check if unchecked version exists, if so convert to checked
+    sed -i '' "s/- [ ] $SESSION/- [x] $SESSION/" "$HARPOON_LIST"
+else # Not found, add as checked
+    echo "- [x] $SESSION" >> "$HARPOON_LIST"
+fi
