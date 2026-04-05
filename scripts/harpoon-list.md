@@ -1,4 +1,4 @@
-- [x] harpooning-tmux
+- [o] harpooning-tmux
 - [ ] git-blog
 - [ ] arbor-the-tree
 - [ ] api-of-arbor-the-tree

@@ -1,29 +1,35 @@
 #!/bin/bash
 set -euo pipefail
 
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # NOTE: '' - just string. literal string << NOT highlight keywords 
 # NOTE: "" - can include variable << highlight keywords
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 tmux display-popup -w 50% -h 50% -E "cd $CURRENT_DIR && vim ./harpoon-list.md" 
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HARPOON_LIST="$SCRIPT_DIR/harpoon-list.md"
-CHECKED_SESSIONS=$(grep -E '^- \[x\]' "$HARPOON_LIST" | sed 's/^- \[x\] //')
-COUNT=$(echo "$CHECKED_SESSIONS" | grep -c .)
+
+LOG_FILE="/tmp/harpooning.log"
+echo "new logs" > "$LOG_FILE"
+
+SESSION=$(grep -E '^- \[x\]' "$HARPOON_LIST" | sed 's/^- \[x\] //' || true)
+if [ -z "$SESSION" ]; then
+    echo "no x" >> "$LOG_FILE"
+    SESSION=$(grep -E '^- \[o\]' "$HARPOON_LIST" | sed 's/^- \[o\] //' || true)
+fi
+if [ -z "$SESSION" ]; then
+    echo "no o" >> "$LOG_FILE"
+    SESSION=$(sed -n "1p" "$HARPOON_LIST" | "sed s/^- \[.*] /")
+fi
+echo "final session: $SESSION" >> "$LOG_FILE"
 
 ADD_SESSION="$SCRIPT_DIR/handle-list/add-session.sh"
 DELETE_SESSION="$SCRIPT_DIR/handle-list/delete-session.sh"
 
-if [ $COUNT -eq 0 ]; then
-    FIRST_SESSION=$(sed -n "1p" "$HARPOON_LIST" | "sed s/^- \[.*] /")
-    tmux switch-client -t "$FIRST_SESSION"
-    bash "$ADD_SESSION" "$FIRST_SESSION"
-else
-    FIRST_CHECKED_SESSION=$(grep -E '^- \[x\]' "$HARPOON_LIST" | sed 's/^- \[x\] //')
-    tmux switch-client -t "$FIRST_CHECKED_SESSION"
-    bash "$ADD_SESSION" "$FIRST_CHECKED_SESSION"
-fi
+tmux switch-client -t "$SESSION"
+bash "$ADD_SESSION" "$SESSION"
 
+# sync list and actual sessions
 LIST_SESSIONS=$(sed 's/^- \[.\] //' "$HARPOON_LIST")
 ACTUAL_SESSIONS=$(tmux list-sessions -F "#{session_name}")
 
