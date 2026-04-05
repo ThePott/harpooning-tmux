@@ -5,17 +5,16 @@ LINE_NUM="$1"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 HARPOON_LIST="$SCRIPT_DIR/harpoon-list.md"
 
-SESSION_NAME=$(sed -n "$((LINE_NUM + 1))p" "$HARPOON_LIST" | "sed s/^- \[.*] /")
+SESSION=$(sed -n "$((LINE_NUM + 1))p" "$HARPOON_LIST" | sed 's/^- \[.*] //')
 
-# handle session
-if [ -n "$SESSION_NAME" ];
-then tmux switch-client -t "$SESSION_NAME"
-else tmux display-message "No session at slot $LINE_NUM"
+if tmux has-session -t="$SESSION" 2>/dev/null; then
+    tmux switch-client -t "$SESSION"
 fi
 
-# NOTE: clear all checks
-sed -i '' '%s/^- \[.*\]/- [ ]' "$HARPOON_LIST"
-if grep -qxF "- [ ] $SESSION" "$HARPOON_LIST"; then # Check if checked version exists
-    sed -i '' "s/- [ ] $SESSION/- [x] $SESSION/" "$HARPOON_LIST"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ADD_SESSION="$SCRIPT_DIR/handle-list/add-session.sh"
+if [ -n "$SESSION" ]; then \
+    bash "$ADD_SESSION" "$SESSION"; \
+else
+    echo "no session"
 fi
-
