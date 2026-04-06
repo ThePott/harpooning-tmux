@@ -1,13 +1,14 @@
-# Too many tmux sessions? Worry not, simply harpoon them.
+# Harpoon Your Tmux Sessions
 
 `harpooning-tmux` is re-invention of ThePrimeagen's Harpoon for tmux. You can select a few sessions and order as your
 taste, navigate them with key binds.
 
 ## What it does
 
-- Search: You can fuzzy find all sessions with fzf
-- Store: You can select certain session to `harpoon-list.txt`
-- Navigate: You can move to n-th session from `harpoon-list.txt` with key bind
+- FZF all path (re-invention of `tmux-sessionizer` of ThePrimeagen)
+- FZF current sessions
+- Harpoon sessions list: You edit list and order of sessions
+- Harpoon sessions with keymap: You can move to n-th session from `harpoon-list.md` with key bind
 
 ## Why new harpoon for tmux when `tmux-sessionizer` exists?
 
